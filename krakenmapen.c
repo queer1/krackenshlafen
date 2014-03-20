@@ -1,4 +1,5 @@
-#include "wpscrack.h"
+#include "globule.h"
+#include "80211.h"
 #include "ap_list.h"
 
 void printMAC (unsigned char *mac)
@@ -41,15 +42,15 @@ int i=0;
 
 				if (frame_header->fc.to_ds == 1 &&  frame_header->fc.from_ds == 0)
 				{
-					add_ap_list(frame_header->addr1, frame_header->addr2);
+					ap_list_add_AP(frame_header->addr1, frame_header->addr2);
 				}
 				if (frame_header->fc.to_ds == 0  && frame_header->fc.from_ds == 1)
 				{
-					add_ap_list(frame_header->addr2, frame_header->addr3);
+					ap_list_add_AP(frame_header->addr2, frame_header->addr3);
 				}
 				if (frame_header->fc.to_ds == 0  && frame_header->fc.from_ds == 0)
 				{
-					//add_ap_list(frame_header->addr3, frame_header->addr2);
+					//ap_list_add_AP(frame_header->addr3, frame_header->addr2);
 				}
 
 
@@ -63,6 +64,7 @@ int i=0;
 					if (tagged_param->number == 0)
 					{
 						SSID = (unsigned char*) (tagged_param+ 1);
+						ap_list_add_AP(frame_header->addr3, NULL);
 						ap_list_add_SSID(frame_header->addr3, SSID, tagged_param->len);
 						//printf("alabala %d\n", tagged_param->len);
 					}
@@ -70,7 +72,6 @@ int i=0;
 			}
 		}
 	}
-	print_ap_list();
 }
 
 int main(int argc, char **argv)
@@ -114,7 +115,7 @@ int main(int argc, char **argv)
 	/* Mark the start time */
 
 	/* Sniff and map the topology of ap and clients. */
-	ap_init_list();	
+	ap_list_init();	
 	sniff_map_and_print();
 
 	/* Mark the end time */

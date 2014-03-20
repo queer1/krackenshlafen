@@ -6,14 +6,18 @@
 AP_struct ap_list[100] = {0};
 int ap_list_count = 0;
 
-void ap_init_list()
+void ap_list_init()
 {
 	ap_list_count = 0;
 }
 
-void ap_add_client( AP_struct *ap,const unsigned char* mac)
+void ap_list_add_client( AP_struct *ap,const unsigned char* mac)
 {
 	int i = 0;
+	if (mac == NULL) 
+	{
+		return;
+	}
 	for (i=0; i< ap->clients_count;i++)
 	{
 		if (memcmp(mac, ap->clients[i], 6*sizeof(unsigned char)) == 0)
@@ -24,25 +28,26 @@ void ap_add_client( AP_struct *ap,const unsigned char* mac)
 	
 	memcpy(ap->clients[ap->clients_count], mac, 6*sizeof(unsigned char));
 	ap->clients_count++;
+	ap_list_print();
 	return;
 }
 
-void add_ap_list(const unsigned char * BSSID, const unsigned char* client)
+void ap_list_add_AP(const unsigned char * BSSID, const unsigned char* client)
 {
 	int i = 0;
 	for (i=0; i< ap_list_count;i++)
 	{
 		if (memcmp(BSSID, ap_list[i].BSSID, 6*sizeof(unsigned char)) == 0)
 		{
-			ap_add_client(&ap_list[i], client);
+			ap_list_add_client(&ap_list[i], client);
 			return;
 		}
 	}
 	memcpy(ap_list[ap_list_count].BSSID, BSSID, 6*sizeof(unsigned char));
 	ap_list[ap_list_count].clients_count = 0;
-	ap_add_client(&ap_list[ap_list_count], client);
+	ap_list_add_client(&ap_list[ap_list_count], client);
 	ap_list_count++;
-	print_ap_list();
+	ap_list_print();
 	return;
 }
 
@@ -59,7 +64,7 @@ void ap_list_add_SSID(const unsigned char * BSSID, unsigned char* SSID, int len)
 	}
 }
 
-void print_ap_list()
+void ap_list_print()
 {
 	int i=0, j=0;
 	printf("-------------------------\n");

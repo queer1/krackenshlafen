@@ -11,9 +11,8 @@ struct AP_struct
 typedef struct AP_struct AP_struct;
 
 void ap_list_add_SSID(const unsigned char * BSSID, unsigned char* SSID, int len);
-void ap_init_list();
-void print_ap_list();
-void ap_add_client( AP_struct *ap,const unsigned char* mac);
-void add_ap_list(const unsigned char * BSSID,const unsigned char* client);
-void print_ap_list();
+void ap_list_init();
+void ap_list_print();
+void ap_list_add_client( AP_struct *ap,const unsigned char* mac);
+void ap_list_add_AP(const unsigned char * BSSID,const unsigned char* client);
 
